@@ -1,0 +1,121 @@
+clientes = []
+vendas = []
+
+produtos = [
+    {"id": 1, "nome": "Pipoca Salgada", "valor": 7.00},
+    {"id": 2, "nome": "Pipoca Doce", "valor": 8.00},
+    {"id": 3, "nome": "Pipoca Caramelizada", "valor": 10.00},
+    {"id": 4, "nome": "Pipoca Gourmet", "valor": 12.00},
+]
+
+id_venda = 1
+
+
+def cadastrar_cliente():
+    clientes.append({
+        "nome": input("Digite o nome do cliente: "),
+        "cpf": input("Digite o CPF do cliente: ")
+    })
+    print("Cliente cadastrado com sucesso!")
+
+
+def listar_produtos():
+    print("\n--- PRODUTOS DISPONÍVEIS ---")
+    for produto in produtos:
+        print(f"ID: {produto['id']} | Nome: {produto['nome']} | Valor: R${produto['valor']:.2f}")
+
+def registrar_venda():
+    global id_venda
+
+    if len(clientes) == 0:
+        print("Nenhum cliente cadastrado. Cadastre um cliente primeiro.")
+        return
+
+    nome_cliente = input("Digite o nome do cliente: ")
+    cliente_encontrado = False
+
+    for cliente in clientes:
+        if cliente["nome"].lower() == nome_cliente.lower():
+            cliente_encontrado = True
+
+    if cliente_encontrado == False:
+        print("Cliente não encontrado.")
+        return
+
+    listar_produtos()
+
+    id_produto = int(input("Digite o ID do produto vendido: "))
+    quantidade = int(input("Digite a quantidade vendida: "))
+    data = input("Digite a data da venda: ")
+
+    produto_escolhido = None
+
+    for produto in produtos:
+        if produto["id"] == id_produto:
+            produto_escolhido = produto
+
+    if produto_escolhido == None:
+        print("Produto não encontrado.")
+        return
+
+    valor_total = produto_escolhido["valor"] * quantidade
+
+    vendas.append({
+        "id": id_venda,
+        "produto_id": produto_escolhido["id"],
+        "produto_nome": produto_escolhido["nome"],
+        "cliente_nome": nome_cliente,
+        "quantidade_vendida": quantidade,
+        "valor": valor_total,
+        "data": data
+    })
+    id_venda += 1
+    print("Venda registrada com sucesso!")
+    print(f"Valor total da venda: R${valor_total:.2f}")
+
+
+def listar_vendas():
+    print("\n--- VENDAS REGISTRADAS ---")
+
+    if len(vendas) == 0:
+        print("Nenhuma venda registrada.")
+        return
+
+    for venda in vendas:
+        print(f"""
+ID da venda: {venda['id']}
+Produto ID: {venda['produto_id']}
+Produto: {venda['produto_nome']}
+Cliente: {venda['cliente_nome']}
+Quantidade vendida: {venda['quantidade_vendida']}
+Valor: R${venda['valor']:.2f}
+Data: {venda['data']}
+""")
+
+def menu():
+    while True:
+        print("""
+--- GERENCIAMENTO DE VENDAS ---
+Fábrica de Pipoca - Loja Própria
+
+1 - Cadastrar cliente
+2 - Listar produtos
+3 - Registrar venda
+4 - Listar vendas
+5 - Sair
+""")
+        opcao = input("Escolha uma opção: ")
+        if opcao == "1":
+            cadastrar_cliente()
+        elif opcao == "2":
+            listar_produtos()
+        elif opcao == "3":
+            registrar_venda()
+        elif opcao == "4":
+            listar_vendas()
+        elif opcao == "5":
+            print("Sistema encerrado.")
+            break
+        else:
+            print("Opção inválida.")
+menu()
